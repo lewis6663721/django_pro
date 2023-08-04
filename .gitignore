@@ -1,0 +1,7 @@
+*.log
+*.jpg
+*.mp4
+*.pt
+*.xml
+.env
+.venv/
