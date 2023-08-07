@@ -15,9 +15,29 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
+from django.views.static import serve
+from django.conf import settings
+from django.conf.urls.static import static
+
+
+def staticfiles_urlpatterns(prefix: str = None) -> static:
+    """
+    静态文件URL映射
+    :param prefix: url前缀
+    :return: static
+    """
+    if not prefix:
+        prefix = settings.STATIC_URL
+    return static(prefix, document_root=settings.STATICFILES_DIRS)
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('index/', include("index.urls"))
+    path('index/', include("index.urls")),
+    # media配置路由的固定写法
+    re_path('media/(?P<path>.*)$', serve, {"document_root": settings.MEDIA_ROOT})
 ]
+
+if settings.DEBUG:
+    urlpatterns += staticfiles_urlpatterns()
