@@ -12,9 +12,11 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os.path
 import sys
 from pathlib import Path
+from django_pro.utils.load_env import load_values
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+ENV_CONFIG = load_values()
 
 sys.path.insert(0, f"{BASE_DIR / 'apps'}")
 
@@ -40,6 +42,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # 第三方app
+    'rest_framework',
+
+    # 自定义app
     'index'
 ]
 
@@ -77,13 +84,23 @@ WSGI_APPLICATION = 'django_pro.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': ENV_CONFIG.get("DB_NAME"),
+        'USER': ENV_CONFIG.get("DB_USER"),
+        'PASSWORD': ENV_CONFIG.get("DB_PASSWORD"),
+        'HOST': ENV_CONFIG.get("DB_HOST"),
+        'PORT': ENV_CONFIG.get("DB_PORT"),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
